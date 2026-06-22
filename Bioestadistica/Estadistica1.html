@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Estadística</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Otoniel Rodríguez" />
+    <script src="Estadistica1_files/header-attrs-2.29/header-attrs.js"></script>
+    <link href="Estadistica1_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="Estadistica1_files/remark-css-0.0.1/rladies.css" rel="stylesheet" />
+    <link href="Estadistica1_files/remark-css-0.0.1/rladies-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Estadística
+]
+.subtitle[
+## Estadistica en R
+]
+.author[
+### Dr. Otoniel Rodríguez
+]
+.date[
+### 21 02 2025
+]
+
+---
+
+##Estadística en R
+####Estadística descriptiva
+Describe, agrupa, resume los datos para su análisis estadístico
+.pull-left[
+
+``` r
+mtcars[1:10,1:4]
+```
+
+```
+##                    mpg cyl  disp  hp
+## Mazda RX4         21.0   6 160.0 110
+## Mazda RX4 Wag     21.0   6 160.0 110
+## Datsun 710        22.8   4 108.0  93
+## Hornet 4 Drive    21.4   6 258.0 110
+## Hornet Sportabout 18.7   8 360.0 175
+## Valiant           18.1   6 225.0 105
+## Duster 360        14.3   8 360.0 245
+## Merc 240D         24.4   4 146.7  62
+## Merc 230          22.8   4 140.8  95
+## Merc 280          19.2   6 167.6 123
+```
+]
+.pull-right[
+
+``` r
+hist(mtcars$mpg)
+```
+
+![](Estadistica1_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+]
+---
+####Estadística Inferencial
+Usa la teoría de la probabilidad para estudiar una **muestra** y realizar inferencias sobre una **población** de interés.
+
+``` r
+x &lt;- seq(-20, 20, by = 0.1); y&lt;-dnorm(x,mean=1,sd=5)
+```
+.pull-left[
+
+``` r
+hist(y, breaks="Sturges",col="lightblue")
+```
+
+![](Estadistica1_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+]
+.pull-right[
+
+``` r
+plot(x,y, type="l", main="normal dist")
+```
+
+![](Estadistica1_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+]
+---
+####Funciones listas para usarse en R
+
+``` r
+x&lt;-c(1,2,3,2,3,2,4,5,6,5,7,6,8,9,10)
+sum(x) #Suma
+```
+
+```
+## [1] 73
+```
+
+``` r
+max(x) #valor máximo
+```
+
+```
+## [1] 10
+```
+
+``` r
+min(x) #mínimo
+```
+
+```
+## [1] 1
+```
+
+``` r
+range(x) #vector de valores máximo y mínimo
+```
+
+```
+## [1]  1 10
+```
+
+``` r
+summary(x) #resumen de datos estadísticos
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   1.000   2.500   5.000   4.867   6.500  10.000
+```
+---
+####Conceptos básicos para iniciar
+- Los **datos** son la materia prima de la estadísitca
+
+- Típicamente tenemos observaciones, medidas o conteos que son nuestros datos de estudio.
+
+
+``` r
+set.seed(1)
+x1 &lt;- rnorm(10)
+x1
+```
+
+```
+##  [1] -0.6264538  0.1836433 -0.8356286  1.5952808  0.3295078 -0.8204684
+##  [7]  0.4874291  0.7383247  0.5757814 -0.3053884
+```
+- Solemos tener registros de esos datos en tablas que luego podemos analizar.
+
+- Un paso inicial suele ser generar un **arreglo ordenado** de los datos.
+
+``` r
+x1or &lt;- x1[order(x1)]# order te da el índice solamente
+x1or
+```
+
+```
+##  [1] -0.8356286 -0.8204684 -0.6264538 -0.3053884  0.1836433  0.3295078
+##  [7]  0.4874291  0.5757814  0.7383247  1.5952808
+```
+- Otro paso importante puede ser generar una **tabla de datos** agrupados.
+
+- Enseguida, podemos empezar a graficar para visualizar el comportamiento de nuestros datos.
+
+---
+#####Suele ser útil hacer una tabla de frecuencias
+
+``` r
+table(x) #tabla de frecuencias
+```
+
+```
+## x
+##  1  2  3  4  5  6  7  8  9 10 
+##  1  3  2  1  2  2  1  1  1  1
+```
+
+``` r
+prop.table(x) #tabla de frecuencias relativas
+```
+
+```
+##  [1] 0.01369863 0.02739726 0.04109589 0.02739726 0.04109589 0.02739726
+##  [7] 0.05479452 0.06849315 0.08219178 0.06849315 0.09589041 0.08219178
+## [13] 0.10958904 0.12328767 0.13698630
+```
+
+``` r
+prop.table(table(x))
+```
+
+```
+## x
+##          1          2          3          4          5          6          7 
+## 0.06666667 0.20000000 0.13333333 0.06666667 0.13333333 0.13333333 0.06666667 
+##          8          9         10 
+## 0.06666667 0.06666667 0.06666667
+```
+---
+####Tabla de frecuencias y frecuencias acumuladas
+
+!['1'](Imagenes/1.jpg)
+#####Frecuencia: Conteo de eventos en cada categoría
+#####Frecuencia Acumulada: Se suman las categorías inferiores
+#####Frecuencia relativa: se divide entre el total de eventos
+#####Frecuencia relativa acumulada: se suma la anterior
+---
+####Tabla de frecuencias y frecuencias acumuladas en R
+#####Generamos una tabla con unos datos simulados
+
+``` r
+x&lt;-runif(2000) #genera números random entre 0 y 1
+k&lt;-nclass.Sturges(x) #calcula intervalos de clase
+k
+```
+
+```
+## [1] 12
+```
+
+``` r
+intervalos &lt;- cut(x,breaks=k) #se generan los intervalos
+FA &lt;- table(intervalos) #se genera la tabla de frec. absolutas
+FR &lt;- prop.table(FA)
+FR
+```
+
+```
+## intervalos
+## (-0.000394,0.0839]     (0.0839,0.167]       (0.167,0.25]       (0.25,0.334] 
+##             0.0930             0.0910             0.0750             0.0785 
+##      (0.334,0.417]        (0.417,0.5]        (0.5,0.584]      (0.584,0.667] 
+##             0.0955             0.0875             0.0760             0.0685 
+##       (0.667,0.75]       (0.75,0.833]      (0.833,0.917]          (0.917,1] 
+##             0.0800             0.0865             0.0790             0.0895
+```
+---
+####Visualización de los datos
+.pull-left[
+
+``` r
+barplot(FR, col="pink")
+```
+
+![](Estadistica1_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+]
+.pull-right[
+######Esto genera un error
+
+``` r
+hist(FR, col="lightblue",
+main="Histograma de frec. rel.")
+```
+
+![](Estadistica1_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+]
+---
+####Visualización de los datos
+
+
+``` r
+boxplot(x, col="pink",xlab="var x")
+```
+
+![](Estadistica1_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+
+---
+####Datos con distribución normal
+.pull-left[
+
+``` r
+set.seed(1)
+xn &lt;- rnorm(1000)
+k &lt;- nclass.Sturges(xn)
+k
+```
+
+```
+## [1] 11
+```
+
+``` r
+int &lt;- cut(xn, breaks= k)
+FA &lt;- table(int)
+```
+]
+.pull-right[
+
+``` r
+barplot(FA, col="purple")
+polygon(FA)# Polígono de frecuencias
+```
+
+![](Estadistica1_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+]
+---
+####Tipos de gráficas para visualizar datos
+
+``` r
+##### Llama a las librerías: "dplyr" y "ggplot2"
+library("dplyr"); library("ggplot2");
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+``` r
+x&lt;-select(msleep, name, sleep_total)
+head (x)
+```
+
+```
+## # A tibble: 6 × 2
+##   name                       sleep_total
+##   &lt;chr&gt;                            &lt;dbl&gt;
+## 1 Cheetah                           12.1
+## 2 Owl monkey                        17  
+## 3 Mountain beaver                   14.4
+## 4 Greater short-tailed shrew        14.9
+## 5 Cow                                4  
+## 6 Three-toed sloth                  14.4
+```
+---
+
+``` r
+ggplot(x, aes(x=sleep_total))+
+  geom_histogram(col="blue", fill="white")+ theme_minimal()
+```
+
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+![](Estadistica1_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+---
+
+``` r
+ggplot(x, aes(x=sleep_total))+
+  geom_freqpoly()+ theme_minimal()
+```
+
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+![](Estadistica1_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+---
+#####Gráfica de barras
+
+``` r
+ggplot(x, aes(x=sleep_total))+
+  geom_bar(col="pink", fill="white")+ theme_minimal()
+```
+
+![](Estadistica1_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+---
+#####Boxplot
+
+``` r
+ggplot(x, aes(y=sleep_total))+
+  geom_boxplot(col="red", fill="pink")+ theme_minimal()
+```
+
+![](Estadistica1_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
+---
+####Gráfica de tallos y hojas
+#####Los valores se dividen en dos, la primera parte son los tallos y la segunda parte son las hojas. Se deben registrar todos los tallos, aunque no haya valores en ese rango.
+.pull-left[
+
+``` r
+stem(msleep$sleep_total)
+```
+
+```
+## 
+##   The decimal point is at the |
+## 
+##    0 | 9
+##    2 | 79013589
+##    4 | 0423346
+##    6 | 23307
+##    8 | 03446779114456788
+##   10 | 01113346900135
+##   12 | 15555880578
+##   14 | 234456996889
+##   16 | 604
+##   18 | 01479
+```
+]
+.pull-right[
+
+``` r
+hist(msleep$sleep_total)
+```
+
+![](Estadistica1_files/figure-html/unnamed-chunk-21-1.png)&lt;!-- --&gt;
+]
+---
+###Medidas de tendencia central
+####**Media, mediana y moda**
+
+``` r
+media&lt;-mean(msleep$sleep_total)
+media
+```
+
+```
+## [1] 10.43373
+```
+
+``` r
+mediana&lt;-median(msleep$sleep_total)
+mediana
+```
+
+```
+## [1] 10.1
+```
+
+``` r
+summary(msleep$sleep_total)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    1.90    7.85   10.10   10.43   13.75   19.90
+```
+---
+#####Calculen las medidas de tendencia de sueño de msleep
+---
+###Medidas de dispersión
+####**Varianza, desviación estándar, Coef. Var.**
+
+
+``` r
+varianza &lt;- var(msleep$sleep_total)
+varianza
+```
+
+```
+## [1] 19.80568
+```
+
+``` r
+desv &lt;- sd(msleep$sleep_total)
+desv
+```
+
+```
+## [1] 4.450357
+```
+
+``` r
+CoVa &lt;- sd(msleep$sleep_total)/mean(msleep$sleep_total)
+CoVa
+```
+
+```
+## [1] 0.4265354
+```
+
+``` r
+EsEr &lt;- sd(msleep$sleep_total)/length(msleep$sleep_total)
+EsEr
+```
+
+```
+## [1] 0.05361876
+```
+---
+####Distribuciones de probabilidad
+- Tenemos distribuciones de probabilidad continuas (normal y otras) y discretas (Poisson y binomial).
+- Las distribuciones discretas nos sirven para registrar datos de conteos de variables discretas.
+- Las distribuciones continuas nos sirven para registrar datos de variables cuantitativas continuas.
+####Distribuciones discretas 
+####Distribución Binomial
+!['2'](Imagenes/2.png)
+---
+
+``` r
+set.seed(1)
+x&lt;-rbinom(50,11,.1)
+x
+```
+
+```
+##  [1] 0 1 1 2 0 2 3 1 1 0 0 0 1 1 2 1 2 4 1 2 3 0 1 0 0 1 0 1 2 1 1 1 1 0 2 1 2 0
+## [39] 2 1 2 1 2 1 1 2 0 1 2 1
+```
+
+``` r
+dbinom(1:3,100,.1)
+```
+
+```
+## [1] 0.0002951267 0.0016231966 0.0058916025
+```
+
+``` r
+pbinom(1:3,100,.1)
+```
+
+```
+## [1] 0.0003216881 0.0019448847 0.0078364871
+```
+---
+.pull-left[
+
+``` r
+set.seed(1)
+x&lt;-rbinom(100,11,.1)
+x
+```
+
+```
+##   [1] 0 1 1 2 0 2 3 1 1 0 0 0 1 1 2 1 2 4 1 2 3 0 1 0 0 1 0 1 2 1 1 1 1 0 2 1 2
+##  [38] 0 2 1 2 1 2 1 1 2 0 1 2 1 1 2 1 0 0 0 1 1 1 1 3 0 1 1 1 0 1 2 0 2 1 2 1 1
+##  [75] 1 2 2 1 2 3 1 2 1 1 2 0 2 0 0 0 0 0 1 2 2 2 1 1 2 1
+```
+
+``` r
+dbinom(1:3,100,.1)
+```
+
+```
+## [1] 0.0002951267 0.0016231966 0.0058916025
+```
+]
+.pull-right[
+
+``` r
+hist(x=rbinom(1000,113,.1))
+```
+
+![](Estadistica1_files/figure-html/unnamed-chunk-26-1.png)&lt;!-- --&gt;
+]
+---
+####Distribución discreta de Poisson
+!['3'](Imagenes/3.png)
+---
+.pull-left[
+
+``` r
+set.seed(1)
+x&lt;-rpois(100,lambda=5)
+x
+```
+
+```
+##   [1]  4  4  5  8  3  8  9  6  6  2  3  3  6  4  7  5  6 11  4  7  9  3  6  3  4
+##  [26]  4  1  4  8  4  5  5  5  3  7  6  7  2  6  4  7  6  7  5  5  7  1  5  6  6
+##  [51]  5  7  4  3  2  2  4  5  6  4  8  4  5  4  6  3  5  7  2  8  4  7  4  4  5
+##  [76]  8  7  4  7  9  4  6  4  4  6  3  6  2  3  3  3  2  6  8  7  7  5  4  7  5
+```
+
+``` r
+dpois(1:3,lambda=5)#Probabilidad
+```
+
+```
+## [1] 0.03368973 0.08422434 0.14037390
+```
+
+``` r
+ppois(1:5,lambda=5)
+```
+
+```
+## [1] 0.04042768 0.12465202 0.26502592 0.44049329 0.61596065
+```
+]
+.pull-right[
+
+``` r
+hist(x=rpois(1000,lambda=5))
+```
+
+![](Estadistica1_files/figure-html/unnamed-chunk-28-1.png)&lt;!-- --&gt;
+]
+---
+####Distribuciones continuas (Normal)
+!['4'](Imagenes/4.png)
+---
+.pull-left[
+
+``` r
+set.seed(1)
+x&lt;-rnorm(50)
+x #Probabilidad
+```
+
+```
+##  [1] -0.62645381  0.18364332 -0.83562861  1.59528080  0.32950777 -0.82046838
+##  [7]  0.48742905  0.73832471  0.57578135 -0.30538839  1.51178117  0.38984324
+## [13] -0.62124058 -2.21469989  1.12493092 -0.04493361 -0.01619026  0.94383621
+## [19]  0.82122120  0.59390132  0.91897737  0.78213630  0.07456498 -1.98935170
+## [25]  0.61982575 -0.05612874 -0.15579551 -1.47075238 -0.47815006  0.41794156
+## [31]  1.35867955 -0.10278773  0.38767161 -0.05380504 -1.37705956 -0.41499456
+## [37] -0.39428995 -0.05931340  1.10002537  0.76317575 -0.16452360 -0.25336168
+## [43]  0.69696338  0.55666320 -0.68875569 -0.70749516  0.36458196  0.76853292
+## [49] -0.11234621  0.88110773
+```
+
+``` r
+rnorm(50, mean=20,sd=5)
+```
+
+```
+##  [1] 21.99053 16.93987 21.70560 14.35318 27.16512 29.90200 18.16389 14.77933
+##  [9] 22.84860 19.32473 32.00809 19.80380 23.44870 20.14001 16.28363 20.94396
+## [17] 10.97521 27.32777 20.76627 30.86306 22.37755 16.45027 23.05363 15.32951
+## [25] 13.73183 21.45723 17.78354 20.00553 20.37171 17.05240 17.15666 19.32411
+## [33] 25.89043 12.38217 22.96973 21.66475 25.31550 18.47908 21.85009 21.33549
+## [41] 17.28740 26.03934 25.80201 23.50107 27.93417 22.79243 13.61704 17.13367
+## [49] 13.87694 17.63300
+```
+]
+.pull-right[
+
+``` r
+hist(x=rnorm(1000), col="cyan")
+```
+
+![](Estadistica1_files/figure-html/unnamed-chunk-30-1.png)&lt;!-- --&gt;
+]
+---
+####Ejemplo con probabilidad de Poisson
+#####En dos épocas distintas del año, la concentración media de un pez es de 5 y 20 especímenes por km3, respectivamente. Grafica la probabilidad de encontrar en 20 muestras independientes 5 a 25 peces en cada caso.
+
+``` r
+x&lt;- 5:25; lambda &lt;- 5
+plot(dpois(x, lambda),type="h", col="Blue",ylab = "P(X = x)")
+lambda &lt;- 20
+lines(dpois(x, lambda), type = "h", col = "green")
+legend("topright", legend = c("5", "20"), col = c("Blue","Green"), lty=1)
+```
+
+&lt;img src="Estadistica1_files/figure-html/unnamed-chunk-31-1.png" style="display: block; margin: auto;" /&gt;
+---
+####Calcula la probabilidad de en cada caso, encontrar en una muestra más de 6 peces.
+
+``` r
+1-ppois(6,lambda=5)
+```
+
+```
+## [1] 0.2378165
+```
+
+``` r
+1-ppois(6,lambda=20)
+```
+
+```
+## [1] 0.9997449
+```
+
+---
+#####La concentración media de un patógeno en agua es de 15 por m3. Grafica la probabilidad de encontrar muestras independientes 10 a 20 en cada caso.
+
+``` r
+x&lt;- 10:20; lambda &lt;- 10
+plot(dpois(x, lambda),type="h", col="blue",ylab = "P(X = x)")
+y&lt;- 10:20; lambda &lt;- 20
+lines(dpois(y, lambda),type = "h", col="green")
+legend("topright", legend = c("15", "50"), col = c("Blue","Green"), lty=1)
+```
+
+&lt;img src="Estadistica1_files/figure-html/unnamed-chunk-33-1.png" style="display: block; margin: auto;" /&gt;
+---
+#####Ejemplo:
+
+``` r
+# Rejilla de valores del eje X
+x &lt;- 1:80
+# n = 80, p = 0.2
+plot(dbinom(x, size = 80, prob = 0.2), type = "h", lwd = 2, main = "Func. de prob. binomial",ylab = "P(X = x)", xlab = "Número de éxitos")
+# n = 80, p = 0.3
+lines(dbinom(x, size = 80, prob = 0.3), type = "h",
+      lwd = 2, col = rgb(1,0,0, 0.7))
+legend("topright", legend = c("80  0.2", "80  0.3"),
+       title = "n     p", title.adj = 0.85,lty = 1, col = 1:3, lwd = 2, box.lty = 0)
+```
+
+![](Estadistica1_files/figure-html/unnamed-chunk-34-1.png)&lt;!-- --&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
